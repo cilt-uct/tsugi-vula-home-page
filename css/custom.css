@@ -1,0 +1,46 @@
+.borderless tr, .borderless td, .borderless th {
+  border: none !important;
+}
+.fa-times {
+color: red;
+}
+.fa-pencil-alt {
+color: green;
+}
+.fa-download {
+color: blue;
+}
+a {
+color:blue;
+cursor: pointer;
+}
+.btn.active {
+background-color: #5bc0de;
+color: white;
+}
+#leftbox { 
+  float:left;  
+  width:73%; 
+  padding: 5px;
+}  
+#rightbox{ 
+  float:right; 
+  width:27%;  
+  padding:5px;
+} 
+.btn_filter {
+  font-size:10px;
+  line-height:1.1;
+  border: 1px solid #5bc0de;
+  background-color: white;
+  color: blue;
+}
+.btn_upload {
+  font-size:15px;
+  line-height:1.1;
+  border: 1px solid blue;
+}
+.btn.scheduler {
+  color: rgb(0, 116, 194) !important;
+  background-color:white !important;
+}
