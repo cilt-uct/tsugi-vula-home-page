@@ -62,7 +62,7 @@ $dir = "svn/homepage/";
   <thead>
     <th onclick="sortTable(0)">Category</th>
     <th>Thumbnail</th>
-    <  <th onclick="sortTable(2)">File name</th>
+    <th onclick="sortTable(2)">File name</th>
     <th onclick="sortTable(3)">Created</th>
     <th onclick="sortTable(4)">Expires</th>
     <th onclick="sortTable(5)">URL</th>
