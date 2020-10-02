@@ -49,7 +49,7 @@ $dir = "svn/homepage/";
           <a type="button" class="btn-floating btn_filter btn btn-sm btn-info" id="eventsFilter" onclick="filterTable('events')">events</a>
           <a type="button" class="btn-floating btn_filter btn btn-sm btn-info" id="cetFilter" onclick="filterTable('cet')">cet</a>
           <a type="button" class="btn-floating btn_filter btn btn-sm btn-info" id="srcFilter" onclick="filterTable('src')">src</a>
-        </div><br/>
+        </div>
         <div class="justify-content-right" id="statusFilterBtnContainer">
           <span class="mr-4 small text-right">Status:</span>
           <a type="button" class="btn-floating btn_filter btn-sm btn btn-info" id="activeFilter" onclick="filterTable('active')">Active</a>
@@ -80,6 +80,10 @@ while($row = fgetcsv($myfile, null, ",")) {
   $filename = $row[1];
   $expiry_date = explode(" ", $row[2], 2)[0];
   $url = $row[3];
+  $fileSize = $row[4];
+  $fileDimesnions = $row[5];
+  $submitter = $row[6];
+  $jiraIssue = $row[7];
   $file_path = $dir.$filename;
   $file_id = explode(".", $filename, 2)[0];
 
@@ -100,8 +104,8 @@ while($row = fgetcsv($myfile, null, ",")) {
   $str .= "<td>".$expiry_date."</td>";
   $str .= "<td><a href='".$url."'>".$url."</a></td>";
   $str .= "<td>".$status."</td>";
-  $str .= "<td></td>";
-  $str .= "<td></td>";
+  $str .= "<td>".$submitter."</td>";
+  $str .= "<td><a href='https://jira.cilt.uct.ac.za/browse/'.$jiraIssue. target='_blank'>".$jiraIssue."</a></td>";
   $str .= "<td>
             <a title='edit file' id='".$file_id."' data-toggle='modal' data-target='#editModal' data-file='".$filename."' data-expiry='".$expiry_date."' data-url='".$url."' data-category='".$category."'>
             <i class='fas fa-pencil-alt'></i></a>&nbsp;<a title='delete file' data-toggle='modal' data-target='#deleteModal' id='".$file_id."' data-file='".$filename."'><i class='fa fa-times'></i></a>&nbsp;";
