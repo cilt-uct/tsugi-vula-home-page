@@ -89,10 +89,12 @@ function searchTable() {
     filter = input.value;
     for (i = 0; i < tr.length; i++) {
         name_td = tr[i].getElementsByTagName("td")[2];
-        date_td = tr[i].getElementsByTagName("td")[3];
-        url_td = tr[i].getElementsByTagName("td")[4];
-        if (name_td+date_td+url_td) {
-            if (name_td.innerHTML.indexOf(filter)+date_td.innerHTML.indexOf(filter)+url_td.innerHTML.indexOf(filter) > -3) {
+        created_td = tr[i].getElementsByTagName("td")[3];
+        expires_td = tr[i].getElementsByTagName("td")[4];
+        url_td = tr[i].getElementsByTagName("td")[5];
+        submitter_td = tr[i].getElementsByTagName("td")[7];
+        if (name_td+created_td+expires_td+url_td+submitter_td) {
+            if (name_td.innerHTML.indexOf(filter)+created_td.innerHTML.indexOf(filter)+expires_td.innerHTML.indexOf(filter)+url_td.innerHTML.indexOf(filter)+submitter_td.innerHTML.indexOf(filter) > -5) {
                 tr[i].style.display = "";
             } else {
                 tr[i].style.display = "none";
@@ -107,7 +109,7 @@ function filterTable(c) {
     filter = c.toUpperCase();
     for (i = 0; i < tr.length; i++) {
         category_td = tr[i].getElementsByTagName("td")[0];
-        status_td = tr[i].getElementsByTagName("td")[5];
+        status_td = tr[i].getElementsByTagName("td")[6];
         if (category_td+status_td) {
             if (category_td.innerHTML.toUpperCase().indexOf(filter)+status_td.innerHTML.toUpperCase().indexOf(filter) > -2) {
                 tr[i].style.display = "";
@@ -128,7 +130,7 @@ function getFileCounts() {
         i;
     
     for (i = 0; i < tr.length; i++) {
-        status_td = tr[i].getElementsByTagName("td")[5];
+        status_td = tr[i].getElementsByTagName("td")[6];
         category_td = tr[i].getElementsByTagName("td")[0];
         if (status_td+category_td) {
             if(status_td.innerHTML === "Active") {

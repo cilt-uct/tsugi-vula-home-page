@@ -62,10 +62,11 @@ $dir = "svn/homepage/";
   <thead>
     <th onclick="sortTable(0)">Category</th>
     <th>Thumbnail</th>
-    <th onclick="sortTable(2)">File name</th>
-    <th onclick="sortTable(3)">Expiry date</th>
-    <th onclick="sortTable(4)">URL</th>
-    <th onclick="sortTable(5)">Status</th>
+    <  <th onclick="sortTable(2)">File name</th>
+    <th onclick="sortTable(3)">Created</th>
+    <th onclick="sortTable(4)">Expires</th>
+    <th onclick="sortTable(5)">URL</th>
+    <th onclick="sortTable(6)">Status</th>
     <th>Submitter</th>
     <th>Comments</th>
     <th>Actions</th>
@@ -84,6 +85,7 @@ while($row = fgetcsv($myfile, null, ",")) {
   $fileDimesnions = $row[5];
   $submitter = $row[6];
   $jiraIssue = $row[7];
+  $date_created = explode(" ", $row[8], 2)[0];
   $file_path = $dir.$filename;
   $file_id = explode(".", $filename, 2)[0];
 
@@ -101,6 +103,7 @@ while($row = fgetcsv($myfile, null, ",")) {
             <img src='".$file_path."' width='50px' class='img-rounded'/></a></td>";
   }
   $str .= "<td>".$filename."</td>";
+  $str .= "<td>".$date_created."</td>";
   $str .= "<td>".$expiry_date."</td>";
   $str .= "<td><a href='".$url."'>".$url."</a></td>";
   $str .= "<td>".$status."</td>";
