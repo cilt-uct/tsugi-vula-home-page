@@ -107,7 +107,7 @@ while($row = fgetcsv($myfile, null, ",")) {
   $str .= "<td>".$filename."</td>";
   $str .= "<td>".$date_created."</td>";
   $str .= "<td>".$expiry_date."</td>";
-  $str .= "<td><a href='".$url."'>".$url."</a></td>";
+  $str .= "<td><a href='".$url."' target='_blank'>".$url."</a></td>";
   $str .= "<td>".$status."</td>";
   $str .= "<td>".$submitter."</td>";
   $str .= "<td><a href='https://jira.cilt.uct.ac.za/browse/'.$jiraIssue. target='_blank'>".$jiraIssue."</a></td>";
