@@ -39,22 +39,24 @@ $dir = "svn/homepage/";
       <div class="form-group form-inline">
       <br/>
         <label>Search:</label>
-        <input type="text" class="form-control xsmall" onkeyup="searchTable()" id="myInput" placeholder="file name / expiry date / url"/>
+        <input type="text" class="form-control xsmall" onkeyup="searchTable()" id="searchInput" placeholder="Enter search string"/>
+        <br/><small><strong>NOTE: </strong>Search by file name / date created / expiry date / url / submitter</small>
       </div>
     </div>
     <div class="col-sm-6 text-right">
         <h3><button type="button" class="btn btn-default scheduler btn-sm" id="uploadFile" data-toggle='modal' data-target='#uploadModal'><i class="fa fa-upload"></i> Upload</button></h3>
-        <div class="justify-content-center p-3" id="catFilterBtnContainer">
-          <span class="mr-4 small">Category:</span>
-          <a type="button" class="btn-floating btn_filter btn btn-sm btn-info" id="eventsFilter" onclick="filterTable('events')">events</a>
-          <a type="button" class="btn-floating btn_filter btn btn-sm btn-info" id="cetFilter" onclick="filterTable('cet')">cet</a>
-          <a type="button" class="btn-floating btn_filter btn btn-sm btn-info" id="srcFilter" onclick="filterTable('src')">src</a>
-        </div>
+
         <div class="justify-content-right" id="statusFilterBtnContainer">
           <span class="mr-4 small text-right">Status:</span>
-          <a type="button" class="btn-floating btn_filter btn-sm btn btn-info" id="activeFilter" onclick="filterTable('active')">Active</a>
-          <a type="button" class="btn-floating btn_filter btn-sm btn btn-info" id="archiveFilter" onclick="filterTable('archive')">Archive</a>
-          <a type="button" class="btn-floating btn_filter btn-sm btn btn-info active" id="allFilter" onclick="filterTable('all')">All</a><br/>
+          <a href="#" rel="all" class="badge badge-pill badge-info statusFilter active" id="active" >Active</a>
+          <a href="#" rel="all" class="badge badge-pill badge-info statusFilter" id="archive">Archive</a>
+          <a href="#" rel="all" class="badge badge-pill badge-info statusFilter" id="all">All</a><br/>
+        </div>
+        <div class="justify-content-center p-3" id="catFilterBtnContainer">
+          <span class="mr-4 small">Category:</span>
+          <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter" id="events">events</a>
+          <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter" id="cet" >cet</a>
+          <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter" id="src">src</a>
         </div><br/>
   </div>
 

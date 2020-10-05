@@ -1,39 +1,28 @@
 var input, filter, td, i;
 var table = document.getElementById("filesTable"),
-    tr = table.getElementsByTagName("tr"),
-    categoryBtnContainer = document.getElementById("catFilterBtnContainer"),
-    statusBtnContainer = document.getElementById("statusFilterBtnContainer"),
-    categoryBtns = categoryBtnContainer.getElementsByClassName("btn");
-    statusBtns = statusBtnContainer.getElementsByClassName("btn");
-
-var _h = document.body.clientHeight + 52; // Margin and shadows
-console.log("resizing: " + _h);
-if (window.self !== window.top) {
-    window.top.postMessage(JSON.stringify({
-        subject: "lti.frameResize",
-        height: _h
-   }),
-"*");
-}
-
-for (i = 0; i < categoryBtns.length; i++) {
-    categoryBtns[i].addEventListener("click", function(){
-        var current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
-    });
-}
-  
-for (i = 0; i < statusBtns.length; i++) {
-    statusBtns[i].addEventListener("click", function(){
-        var current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
-    });
-}
+    tr = table.getElementsByTagName("tr");
 
 $(document).ready(function () {
-    getFileCounts();
+    var c = "Active",
+        clickedStatus = "active"
+        clickedCategory = "";
+
+    filterTable(c);
+
+    $('.statusFilter').click(function () {
+        $(".statusFilter").removeClass("active");
+        $(".categoryFilter").removeClass("active");
+        $(this).addClass(" active"); 
+        clickedStatus = $(this).attr("id");
+        filterTable(clickedStatus);
+    });
+
+    $('.categoryFilter').click(function () {
+        $(".categoryFilter").removeClass("active");
+        $(this).addClass(" active"); 
+        clickedCategory = $(this).attr("id");
+        filterByCategory(clickedStatus, clickedCategory);
+    });
 
     $('#uploadModal').on('hidden.bs.modal', function () {
         $('#uploadModal #file_category').val("");
@@ -45,8 +34,7 @@ $(document).ready(function () {
     });
 
     $('#editModal').on('shown.bs.modal', function (e) {
-        var tiggerElement = e.relatedTarget,
-            fileId = tiggerElement.getAttribute('id'),
+        var tiggerElement = e.relatedTarget
             fileCategory = tiggerElement.getAttribute('data-category'),
             fileName = tiggerElement.getAttribute('data-file'),
             fileExpiry = tiggerElement.getAttribute('data-expiry'),
@@ -85,7 +73,7 @@ $(document).ready(function () {
 
 //Search for a file
 function searchTable() {
-    input = document.getElementById("myInput");
+    input = document.getElementById("searchInput");
     filter = input.value;
     for (i = 0; i < tr.length; i++) {
         name_td = tr[i].getElementsByTagName("td")[2];
@@ -105,55 +93,67 @@ function searchTable() {
 
 //filter table by status and category
 function filterTable(c) {
-    if (c == "all") c = "";
-    filter = c.toUpperCase();
+    if (c == "all") { c = "";  } 
+
+    var statusFilter = c.toUpperCase(),
+        srcCount = 0, cetCount = 0, eventsCount = 0,
+        allCount = 0, activeCount = 0, archiveCount = 0;
+   
     for (i = 0; i < tr.length; i++) {
-        category_td = tr[i].getElementsByTagName("td")[0];
-        status_td = tr[i].getElementsByTagName("td")[6];
-        if (category_td+status_td) {
-            if (category_td.innerHTML.toUpperCase().indexOf(filter)+status_td.innerHTML.toUpperCase().indexOf(filter) > -2) {
+        var category_td = tr[i].getElementsByTagName("td")[0],
+            status_td = tr[i].getElementsByTagName("td")[6];
+
+        if (status_td+category_td) {
+
+            //count per status
+            if(status_td.innerHTML === "Active") {
+                activeCount++;
+            } else if(status_td.innerHTML === "Archive"){
+                archiveCount++;
+            }
+            allCount = activeCount + archiveCount; 
+
+            //count per category and filter by status
+            if (status_td.innerHTML.toUpperCase().indexOf(statusFilter) > -1) {
+                if(category_td.innerHTML  === "cet") {
+                    cetCount++;
+                } else if(category_td.innerHTML === "src"){
+                    srcCount++;
+                } else if(category_td.innerHTML === "events"){
+                    eventsCount++;
+                }
                 tr[i].style.display = "";
             } else {
                 tr[i].style.display = "none";
             }
         }       
     }
+    document.getElementById('active').innerHTML = "Active <span class='badge badge-light'>"+ activeCount + "</span>";
+    document.getElementById('archive').innerHTML = "Archive <span class='badge badge-light'>" + archiveCount + "</span>";
+    document.getElementById('all').innerHTML = "All <span class='badge badge-light'>" + allCount + "</span>";
+    document.getElementById('src').innerHTML = "src  <span class='badge badge-light'>" + srcCount +"</span>" ;
+    document.getElementById('events').innerHTML = "events  <span class='badge badge-light'>" + eventsCount +"</span>";
+    document.getElementById('cet').innerHTML = "cet  <span class='badge badge-light'>" + cetCount +"</span>";
 }
 
-function getFileCounts() {
-    var allCount = 0,
-        activeCount = 0, 
-        archiveCount = 0, 
-        srcCount = 0,
-        cetCount = 0,
-        eventsCount = 0,
-        i;
+function filterByCategory(clickedStatus, clickedCategory) {
+    if (clickedStatus == "all") { clickedStatus = "";  } 
     
+    var statusFilter = clickedStatus.toUpperCase(),
+        categoryFilter = clickedCategory.toUpperCase();
+
     for (i = 0; i < tr.length; i++) {
-        status_td = tr[i].getElementsByTagName("td")[6];
-        category_td = tr[i].getElementsByTagName("td")[0];
+        var category_td = tr[i].getElementsByTagName("td")[0],
+            status_td = tr[i].getElementsByTagName("td")[6];
+
         if (status_td+category_td) {
-            if(status_td.innerHTML === "Active") {
-                activeCount++;
-            } else if(status_td.innerHTML === "Archive"){
-                archiveCount++;
-            }  
-            if(category_td.innerHTML  === "cet") {
-                cetCount++;
-            } else if(category_td.innerHTML === "src"){
-                srcCount++;
-            } else if(category_td.innerHTML === "events"){
-                eventsCount++;
+            if (status_td.innerHTML.toUpperCase().indexOf(statusFilter) > -1 && category_td.innerHTML.toUpperCase().indexOf(categoryFilter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
             }
-            allCount = activeCount + archiveCount;           
-        }    
-      }
-    document.getElementById('activeFilter').innerHTML = activeCount + " Active";
-    document.getElementById('archiveFilter').innerHTML = archiveCount + " Archive";
-    document.getElementById('allFilter').innerHTML = allCount + " All";
-    document.getElementById('cetFilter').innerHTML = cetCount + " cet";
-    document.getElementById('srcFilter').innerHTML = srcCount + " src";
-    document.getElementById('eventsFilter').innerHTML = eventsCount + " events";
+        }
+    }
 }
 
 // sort the table by table headers
@@ -166,8 +166,8 @@ function sortTable(n) {
         rows = table.rows;
         for (i = 1; i < (rows.length - 1); i++) {
             shouldSwitch = false;
-            x = rows[i].getElementsByTagName("TD")[n];
-            y = rows[i + 1].getElementsByTagName("TD")[n];
+            x = rows[i].getElementsByTagName("td")[n];
+            y = rows[i + 1].getElementsByTagName("td")[n];
             if (dir == "asc") {
                 if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                     shouldSwitch= true;
