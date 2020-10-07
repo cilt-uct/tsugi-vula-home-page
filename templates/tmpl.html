@@ -33,22 +33,24 @@
 <script type="text/x-tmpl" id="tmpl-table-row"> 
     <tr data-category="{%=o.category%}" data-status="{%=o.status%}">
         <td>{%=o.category%}</td>
-        <td>{%=o.filename%}</td>
+        <td><img src="svn/homepage/{%=o.filename%}" alt="{%=o.filename%}" /></td>
         <td>{%=o.created%}</td>
         <td>{%=o.expires%}</td>
         <td>{%=o.url%}</td>
         <td>{%=o.status%}</td>
         <td>{%=o.submitter%}</td>
-        <td class="actions">
-            <a title="View {%=o.jiraIssue%}" href="{%=o.jiraIssue%}" target="_blank">
-                <img src='static/logo-jira.png' alt="{%=o.jiraIssue%}"/>
-            </a>
-            <a title='Edit file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
-                <i class='fas fa-pencil-alt'></i>
-            </a>
-            <a title='Delete file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
-                <i class='fa fa-times'></i>
-            </a>
+        <td>
+            <div class="actions">
+                <a title="View {%=o.jiraIssue%}" href="{%=o.jiraIssue%}" target="_blank">
+                    <img src='static/logo-jira.png' alt="{%=o.jiraIssue%}"/>
+                </a>
+                <a title='Edit file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
+                    <i class='fas fa-pencil-alt'></i>
+                </a>
+                <a title='Delete file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
+                    <i class='fa fa-times'></i>
+                </a>
+            </div>
         </td>
     </tr>
 </script>

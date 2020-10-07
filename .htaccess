@@ -4,15 +4,18 @@
         RewriteCond %{HTTPS} on
         RewriteRule ^ - [E=protossl:s]
 
+        RewriteCond %{REQUEST_URI} !(\.png|\.PNG|\.jpeg|\.JPEG|\.gif|\.GIF|\.jpg|\.JPG)$ [NC]
+
         # Root folder all alone
-        RewriteRule "^/$" index.php [L]
+        # RewriteRule "^/$" index.php [L]
+
         # Root folder with GET parameters
         RewriteRule "^/?.*$" index.php [L]
         RewriteRule "(^|/)\." - [F]
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteCond %{REQUEST_FILENAME} !-d
         RewriteCond %{REQUEST_URI} !=/favicon.ico
-        RewriteCond %{REQUEST_URI} !=static/*
+        
         RewriteRule ^ index.php [L]
     </IfModule>
     

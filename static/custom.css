@@ -111,3 +111,29 @@ a {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
+
+.table .actions {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#table-info.table td > img {
+    width: 80px;
+}
+
+#table-info.table td a {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #efefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#table-info.table td a > img {
+    width: 22px;
+}
+
+#table-info.table td a > i {
+    font-size: 1.2em;
+}
