@@ -1,6 +1,6 @@
 var input, filter, td, i;
 var table = document.getElementById("filesTable"),
-    tr = table.getElementsByTagName("tr");
+    tr = document.getElementsByTagName("tr");
 
 $(document).ready(function () {
     var c = "Active",
@@ -70,6 +70,7 @@ $(document).ready(function () {
         $('#imageModal').modal();
     });
 });
+
 
 //Search for a file
 function searchTable() {

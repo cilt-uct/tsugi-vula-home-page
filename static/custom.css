@@ -1,0 +1,66 @@
+.borderless tr, .borderless td, .borderless th {
+  border: none !important;
+}
+.fa-times {
+  color: red;
+}
+.fa-pencil-alt {
+  color: green;
+}
+.fa-download {
+  color: blue;
+}
+a {
+  color:blue;
+  cursor: pointer;
+} 
+.btn_filter {
+  font-size:10px;
+  line-height:1.1;
+  border: 1px solid #5bc0de;
+  background-color: white;
+  color: blue;
+}
+.btn_upload {
+  font-size:15px;
+  line-height:1.1;
+  border: 1px solid blue;
+}
+.btn.scheduler {
+  color: rgb(0, 116, 194) !important;
+  background-color:white !important;
+}
+.badge {
+  padding: 2px 9px 2px;
+  font-size: 10.025px;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: #999999;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+.badge:hover {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.badge-light {
+  background-color:  #ffffff;
+  color: black;
+}
+.badge-info {
+  background-color: #5bc0de;
+}
+.badge-info:hover {
+  background-color: #2d6987;
+}
+.badge-info.statusFilter.active {
+  background-color: #7f8aa1 !important;
+  color: white;
+}
+.badge-info.categoryFilter.active {
+  background-color: #7f8aa1 !important;
+  color: white;
+} 

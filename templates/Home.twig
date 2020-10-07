@@ -1,0 +1,46 @@
+{% extends "@Tsugi/Page.twig" %}
+
+{% block head %}
+    {% for style in styles %}
+        <link rel="stylesheet" type="text/css" href="{{style}}"/>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div id="title">
+            <h4>Vula Files UI</h4>
+        </div>
+        <div id="header"></div>
+        <div id="table-info">
+            <div id="tableBody"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+    
+        $(function() {
+           
+            $('#header').html(tmpl('tmpl-header'));
+            $.ajax({
+                url : 'getFiles.php',
+                type : 'POST',
+            }).done(function(response) {
+                var myObj = JSON.parse(response);
+                $('#tableBody').html(tmpl('tmpl-table', {"files": myObj}));
+            }).fail(function( jqXHR, textStatus ) {
+                console.log(textStatus);
+            });
+        });
+
+        var input, filter, td, i;
+        var table = document.getElementById("filesTable"),
+            tr = document.getElementsByTagName("tr");
+
+        
+    </script>
+    
+    {{ source('tmpl.html', ignore_missing = true) }}
+{% endblock %}
