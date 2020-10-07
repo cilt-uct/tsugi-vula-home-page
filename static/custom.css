@@ -64,3 +64,50 @@ a {
   background-color: #7f8aa1 !important;
   color: white;
 } 
+
+.table th.sortable { cursor: pointer; }
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    margin-right: 6px;
+    position: relative;
+    visibility: hidden;
+}
+
+.asc .arrow {
+    visibility: visible;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    top: 1px;
+}
+
+.desc .arrow {
+    visibility: visible;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    top: -2px;
+}        
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.up {
+    visibility: visible;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.down {
+    visibility: visible;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}

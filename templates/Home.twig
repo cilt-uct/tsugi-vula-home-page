@@ -11,35 +11,88 @@
         <div id="title">
             <h4>Vula Files UI</h4>
         </div>
-        <div id="header"></div>
-        <div id="table-info">
-            <div id="tableBody"></div>
+        <div id="header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group form-inline">
+                        <br/>
+                        <label>Search:</label>
+                        <input type="text" class="form-control xsmall" id="searchInput" placeholder="Enter search string"/>
+                        <br/>
+                        <small>
+                            <strong>NOTE: </strong> Search by file name / date created / expiry date / url / submitter
+                        </small>
+                    </div>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <h3><button type="button" class="btn btn-default scheduler btn-sm" id="uploadFile" data-toggle='modal' data-target='#uploadModal'><i class="fa fa-upload"></i> Upload</button></h3>
+                    <div id="filterContainer">
+                        <div class="justify-content-right" id="statusFilterBtnContainer"></div>
+                        <div class="justify-content-center p-3" id="catFilterBtnContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <table id="table-info" class="table table-hover table-condensed table-bordered table-striped" id="filesTable">
+                <thead>
+                    <th class="sortable"><i class="arrow"></i> Category</th>
+                    <th>Thumbnail</th>
+                    <th class="sortable"><i class="arrow"></i> Created</th>
+                    <th class="sortable"><i class="arrow"></i> Expires</th>
+                    <th class="sortable"><i class="arrow"></i> URL</th>
+                    <th class="sortable"><i class="arrow"></i> Status</th>
+                    <th class="sortable"><i class="arrow"></i> Submitter</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody id="table-info-body">
+                    <tr>
+                        <td colspan="8">Loading files ...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}
 
 {% block footer %}
+    {% for script in scripts %}
+        <script src="{{script}}" type="text/javascript"></script>
+    {% endfor %}
     <script>
-    
+        var data = [];
         $(function() {
            
-            $('#header').html(tmpl('tmpl-header'));
-            $.ajax({
-                url : 'getFiles.php',
-                type : 'POST',
-            }).done(function(response) {
-                var myObj = JSON.parse(response);
-                $('#tableBody').html(tmpl('tmpl-table', {"files": myObj}));
+            $.getJSON('{{ getUrl }}', function(_data) {
+
+                //data = _data;
+                const list = _data.slice(Math.max(_data.length - 10, 0));
+                data = list;
+                //console.log(list);
+
+                // const counts = list.reduce(function(result, obj) { if (obj !== null) result.push(obj.src); return result;}, []),
+                const counts = { active: 0, archive: 0, events: 0, cet: 0, src: 0, active_status: 'active', active_category: 'all' };
+                $.each(list, function(i,el) {
+                    if (new Date(el['expires'] +' 23:59:59') <= new Date()) {
+                        counts.archive ++;
+                        el.status = 'archive';
+                    } else {
+                        counts.active ++;
+                        el.status = 'active';
+                    }
+                    counts[ el['category'] ] ++;
+                });
+
+                $('#statusFilterBtnContainer').html(tmpl('tmpl-filter-status', counts));
+                $('#catFilterBtnContainer').html(tmpl('tmpl-filter-category', counts));
+                $('#table-info-body').html(tmpl('tmpl-table', list));
+                filterTable();
+
             }).fail(function( jqXHR, textStatus ) {
                 console.log(textStatus);
             });
+
         });
-
-        var input, filter, td, i;
-        var table = document.getElementById("filesTable"),
-            tr = document.getElementsByTagName("tr");
-
-        
     </script>
     
     {{ source('tmpl.html', ignore_missing = true) }}

@@ -15,33 +15,36 @@ class Home {
 
         $context = array();
         $context['styles']  = [ addSession('static/custom.css') ];
-        $context['scripts'] = [ addSession('js/custom.js')];
+        $context['scripts'] = [ addSession('static/custom.js') ];
+        $context['getUrl'] = addSession('info');
+        
+        // $context['jira'] = addSession('static/grid.svg');
 
         return $app['twig']->render('Home.twig', $context);
     }
 
-    private function getValues($id, $total, $arr) {
+    public function getInfo(Request $request, Application $app) {
+        $i = 0; // to drop
 
         $result = array();
-        $cloned = array_replace([], $arr);
-        $max = $total;
+        $myfile = fopen("svn/homepage/files", "r") or die("Unable to open file!");
 
-        for ($x = 0; $x < count($cloned); $x ++) {
-        
-            $arr[$x]->v = rand(0, $max);
-            $max -= $arr[$x]->v;
-            $max = $max > 0 ? $max : 0;
+        while($row = fgetcsv($myfile, null, ",")) {
+            $result[$i]['category'] = $row[0];
+            $result[$i]['filename'] = $row[1]; 
+            $result[$i]['expires'] = date('Y-m-d', strtotime($row[2])); // just the date
+            $result[$i]['url'] = $row[3]; 
+            $result[$i]['fileSize'] = $row[4]; 
+            $result[$i]['fileDimensions'] = $row[5]; 
+            $result[$i]['submitter'] =  explode("<", $row[6], 2)[0]; // just the name
+            $result[$i]['jiraIssue'] = $row[7]; 
+            $result[$i]['created'] =  date('Y-m-d', strtotime($row[8])); // just the date
+
+            $i++; // to drop
+            //array_push($result, []);
         }
-        $cloned[count($cloned)-1]->v = $max;
 
-        return array("id" => $id, "results" => $cloned);
-    }
-
-    private function getInfo(Request $request, Application $app) {
-        $result = $this->getJSON($app, $app['tsugi']->context->launch->ltiRawParameter('context_id','none'));
-
-        // Testing: 
-        // $result = $this->getJSON($app, '15179'); // 15179.jpeg
+        fclose($myfile);
 
         return new Response(json_encode($result), 200, ['Content-Type' => 'application/json']);
     }
@@ -68,6 +71,10 @@ class Home {
                 $contentType = 'image/svg+xml';
                 break;
             }
+            case 'png' : {
+                $contentType = 'image/svg+xml';
+                break;
+            }            
             default : {
                 $contentType = 'text/plain';
             }
@@ -77,5 +84,4 @@ class Home {
             'Content-Type' => $contentType
         ]);
     }
-
 }

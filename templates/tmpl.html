@@ -1,74 +1,54 @@
-<script type="text/x-tmpl" id="tmpl-header">
-    <div class="row">
-        <div class="col-sm-6">
-          <div class="form-group form-inline">
-            <br/>
-            <label>Search:</label>
-            <input type="text" class="form-control xsmall" onkeyup="searchTable()" id="searchInput" placeholder="Enter search string"/>
-            <br/><small><strong>NOTE: </strong>Search by file name / date created / expiry date / url / submitter</small>
-          </div>
-        </div>
-        <div class="col-sm-6 text-right">
-            <h3><button type="button" class="btn btn-default scheduler btn-sm" id="uploadFile" data-toggle='modal' data-target='#uploadModal'><i class="fa fa-upload"></i> Upload</button></h3>
-    
-            <div class="justify-content-right" id="statusFilterBtnContainer">
-              <span class="mr-4 small text-right">Status:</span>
-              <a href="#" rel="all" class="badge badge-pill badge-info statusFilter active" id="active" >Active</a>
-              <a href="#" rel="all" class="badge badge-pill badge-info statusFilter" id="archive">Archive</a>
-              <a href="#" rel="all" class="badge badge-pill badge-info statusFilter" id="all">All</a><br/>
-            </div>
-            <div class="justify-content-center p-3" id="catFilterBtnContainer">
-              <span class="mr-4 small">Category:</span>
-              <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter" id="events">events</a>
-              <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter" id="cet" >cet</a>
-              <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter" id="src">src</a>
-            </div>
-        </div><br/>
-    </div>
+<script type="text/x-tmpl" id="tmpl-filter-status">
+    <span class="mr-4 small text-right">Status:</span>
+    <a href="#" rel="active" class="badge badge-pill badge-info statusFilter {%=(o.active_status == 'active' ? 'active': '')%}" 
+        id="active">Active <span class='badge badge-light'>{%=o.active%}</span></a>
+    <a href="#" rel="archive" class="badge badge-pill badge-info statusFilter {%=(o.active_status == 'archive' ? 'active': '')%}" 
+        id="archive">Archive <span class='badge badge-light'>{%=o.archive%}</span></a>
+    <a href="#" rel="all" class="badge badge-pill badge-info statusFilter {%=(o.active_status == 'all' ? 'active': '')%}" 
+        id="all">All <span class='badge badge-light'>{%=(o.active+o.archive)%}</span></a>
 </script>
-<script type="text/x-tmpl" id="tmpl-table">
-    {%  
-      var fileDetails = o.files; console.log(fileDetails.length);
-      if (fileDetails.length) {
-    %}
+<script type="text/x-tmpl" id="tmpl-filter-category">
+    <span class="mr-4 small">Category:</span>
+    <a href="#" rel="events" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'events' ? 'active': '')%}" 
+        id="events">events <span class='badge badge-light'>{%=o.events%}</span></a>
+    <a href="#" rel="cet" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'cet' ? 'active': '')%}" 
+        id="cet">cet <span class='badge badge-light'>{%=o.cet%}</span></a>
+    <a href="#" rel="src" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'src' ? 'active': '')%}" 
+        id="src">src <span class='badge badge-light'>{%=o.src%}</span></a>
+    <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'all' ? 'active': '')%}" 
+        id="all">All <span class='badge badge-light'>{%=(o.events + o.cet + o.src)%}</span></a>
+</script>
 
-    <table class="table table-hover table-condensed table-bordered table-striped" id="filesTable">
-      <thead>
-        <th onclick="sortTable(0)">Category</th>
-        <th>Thumbnail</th>
-        <th onclick="sortTable(2)">File name</th>
-        <th onclick="sortTable(3)">Created</th>
-        <th onclick="sortTable(4)">Expires</th>
-        <th onclick="sortTable(5)">URL</th>
-        <th onclick="sortTable(6)">Status</th>
-        <th>Submitter</th>
-        <th>Comments</th>
-        <th>Actions</th>
-      </thead>
-      <tbody>
-        
-        {% for (var i = 0; i < 10; i++) {  %}
-
-            <tr>
-              <td> {%= fileDetails[i].category %} </td>
-              <td></td>
-              <td> {%= fileDetails[i].filename %} </td>
-              <td> {%= fileDetails[i].created %}</td>
-              <td> {%= fileDetails[i].expires %} </td>
-              <td><a href="{%= fileDetails[i].url %}" target="_blank"> {%= fileDetails[i].url %} </a></td>
-              <td> {%= fileDetails[i].status %} </td>
-              <td> {%= fileDetails[i].submitter %} </td>
-              <td><a href="{%= fileDetails[i].jiraIssue %}" target="_blank"> {%= fileDetails[i].jiraIssue %} </a></td>
-              <td></td>
-            </tr>
-
-        {% }   %}
-
-      </tbody>
-    </table>
-
-    {%
-      }
-    %}
-    
+<script type="text/x-tmpl" id="tmpl-table"> 
+    {%  if (o.length > 0) { 
+        $.each(o, function(i, el){
+            include('tmpl-table-row', el);
+        });
+     } else { %}
+        <tr>
+            <td colspan="8">No data</td>
+        </tr>
+    {% } %}
+</script>
+<script type="text/x-tmpl" id="tmpl-table-row"> 
+    <tr data-category="{%=o.category%}" data-status="{%=o.status%}">
+        <td>{%=o.category%}</td>
+        <td>{%=o.filename%}</td>
+        <td>{%=o.created%}</td>
+        <td>{%=o.expires%}</td>
+        <td>{%=o.url%}</td>
+        <td>{%=o.status%}</td>
+        <td>{%=o.submitter%}</td>
+        <td class="actions">
+            <a title="View {%=o.jiraIssue%}" href="{%=o.jiraIssue%}" target="_blank">
+                <img src='static/logo-jira.png' alt="{%=o.jiraIssue%}"/>
+            </a>
+            <a title='Edit file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
+                <i class='fas fa-pencil-alt'></i>
+            </a>
+            <a title='Delete file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
+                <i class='fa fa-times'></i>
+            </a>
+        </td>
+    </tr>
 </script>
