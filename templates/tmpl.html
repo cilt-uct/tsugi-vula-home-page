@@ -1,56 +1,64 @@
 <script type="text/x-tmpl" id="tmpl-filter-status">
     <span class="mr-4 small text-right">Status:</span>
     <a href="#" rel="active" class="badge badge-pill badge-info statusFilter {%=(o.active_status == 'active' ? 'active': '')%}" 
-        id="active">Active <span class='badge badge-light'>{%=o.active%}</span></a>
+        id="active"  data-total="{%=o.active_records%}">Active <span class='badge badge-light'>{%=o.active_records%}</span></a>
+    <a href="#" rel="inactive" class="badge badge-pill badge-info statusFilter {%=(o.active_status == 'inactive' ? 'active': '')%}" 
+        id="inactive"  data-total="{%=o.inactive_records%}">Inactive <span class='badge badge-light'>{%=o.inactive_records%}</span></a>
     <a href="#" rel="archive" class="badge badge-pill badge-info statusFilter {%=(o.active_status == 'archive' ? 'active': '')%}" 
-        id="archive">Archive <span class='badge badge-light'>{%=o.archive%}</span></a>
+        id="archive"  data-total="{%=o.archive_records%}">Archive <span class='badge badge-light'>{%=o.archive_records%}</span></a>
     <a href="#" rel="all" class="badge badge-pill badge-info statusFilter {%=(o.active_status == 'all' ? 'active': '')%}" 
-        id="all">All <span class='badge badge-light'>{%=(o.active+o.archive)%}</span></a>
+        id="all"  data-total="{%=(o.total_records)%}">All <span class='badge badge-light'>{%=(o.total_records)%}</span></a>
 </script>
 <script type="text/x-tmpl" id="tmpl-filter-category">
     <span class="mr-4 small">Category:</span>
     <a href="#" rel="events" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'events' ? 'active': '')%}" 
-        id="events">events <span class='badge badge-light'>{%=o.events%}</span></a>
+        id="events" data-total="{%=o.total_events%}">events <span class='badge badge-light'>{%=o.total_events%}</span></a>
     <a href="#" rel="cet" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'cet' ? 'active': '')%}" 
-        id="cet">cet <span class='badge badge-light'>{%=o.cet%}</span></a>
+        id="cet"  data-total="{%=o.total_cet%}">cet <span class='badge badge-light'>{%=o.total_cet%}</span></a>
     <a href="#" rel="src" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'src' ? 'active': '')%}" 
-        id="src">src <span class='badge badge-light'>{%=o.src%}</span></a>
+        id="src"  data-total="{%=o.total_src%}">src <span class='badge badge-light'>{%=o.total_src%}</span></a>
     <a href="#" rel="all" class="badge badge-pill badge-info categoryFilter {%=(o.active_category == 'all' ? 'active': '')%}" 
-        id="all">All <span class='badge badge-light'>{%=(o.events + o.cet + o.src)%}</span></a>
+        id="all"  data-total="{%=(parseInt(o.total_events) + parseInt(o.total_cet) + parseInt(o.total_src))%}" >All 
+        <span class='badge badge-light'>{%=(parseInt(o.total_events) + parseInt(o.total_cet) + parseInt(o.total_src))%}</span></a>
 </script>
 
 <script type="text/x-tmpl" id="tmpl-table"> 
-    {%  if (o.length > 0) { 
-        $.each(o, function(i, el){
-            include('tmpl-table-row', el);
-        });
-     } else { %}
-        <tr>
-            <td colspan="8">No data</td>
-        </tr>
-    {% } %}
+  {%  if (o.length > 0) { console.log('hello');
+      $.each(o, function(i, el){
+          include('tmpl-table-row', el);
+      });
+   } else { %}
+      <tr>
+          <td colspan="8">No data</td>
+      </tr>
+  {% } %}
 </script>
 <script type="text/x-tmpl" id="tmpl-table-row"> 
-    <tr data-category="{%=o.category%}" data-status="{%=o.status%}">
-        <td>{%=o.category%}</td>
-        <td><img src="svn/homepage/{%=o.filename%}" alt="{%=o.filename%}" /></td>
-        <td>{%=o.created%}</td>
-        <td>{%=o.expires%}</td>
-        <td>{%=o.url%}</td>
-        <td>{%=o.status%}</td>
-        <td>{%=o.submitter%}</td>
-        <td>
-            <div class="actions">
-                <a title="View {%=o.jiraIssue%}" href="{%=o.jiraIssue%}" target="_blank">
-                    <img src='static/logo-jira.png' alt="{%=o.jiraIssue%}"/>
-                </a>
-                <a title='Edit file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
-                    <i class='fas fa-pencil-alt'></i>
-                </a>
-                <a title='Delete file' data-toggle='modal' data-target='#editModal' data-file='{%=o.filename%}' href="#">
-                    <i class='fa fa-times'></i>
-                </a>
-            </div>
-        </td>
-    </tr>
+  <tr data-category="{%=o.category%}" data-status="{%=o.status%}" id="tableRow">
+      <td>{%=o.category%}</td>
+      <td class="text-center">
+        <a data-toggle="modal" data-target="#imageModal" id="{%=o.filename%}" data-url="svn/homepage/{%=o.filename%}">
+            <img src="svn/homepage/{%=o.filename%}" alt="{%=o.filename%}" width="40px" class="img-rounded"/>
+        </a>
+      </td>
+      <td data-expires="{%=o.expires%}" >{%=o.expires%}</td>
+      <td data-url="{%=o.url%}" class="text-center"><a href="{%=o.url%}" target="_blank" title="{%=o.url%}"><i class="fa fa-external-link" aria-hidden="true"></i></a></td>
+      <td data-created="{%=o.created%}">{%=o.created%}</td>
+      <td>{%=o.status%}</td>
+      <td data-submitter="{%=o.submitter%}">{%=o.submitter%} <br/><a href="mailto:{%=o.submitterEmail%}">{%=o.submitterEmail%}</a></td>
+      <td class="text-center">
+          <div class="actions">
+              <a title="View {%=o.jiraIssue%}" href="https://jira.cilt.uct.ac.za/browse/{%=o.jiraIssue%}" target="_blank">
+                  <img src="static/logo-jira.png" style="width: 18px;height: 18px;" alt="{%=o.jiraIssue%}"/>
+              </a>
+              <a title="Edit file" data-toggle="modal" data-target="#editModal" data-file="{%=o.filename%}" href="#" data-url="{%=o.url%}" data-expiry="{%=o.expires%}" data-category="{%=o.category%}" data-submitter="{%=o.submitter%}" >
+                  <i class="fas fa-pencil-alt"></i>
+              </a>
+              <a title="Delete file" data-toggle="modal" data-target="#deleteModal" data-file="{%=o.filename%}" data-expires="{%=o.expires%}" href="#">
+                  <i class="fa fa-times-circle" style="color:red;"></i>
+              </a>
+          </div>
+      </td>
+  </tr>
 </script>
+
