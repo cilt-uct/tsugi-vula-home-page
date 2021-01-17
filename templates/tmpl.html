@@ -22,43 +22,82 @@
         <span class='badge badge-light'>{%=(parseInt(o.total_events) + parseInt(o.total_cet) + parseInt(o.total_src))%}</span></a>
 </script>
 
-<script type="text/x-tmpl" id="tmpl-table"> 
-  {%  if (o.length > 0) { console.log('hello');
-      $.each(o, function(i, el){
-          include('tmpl-table-row', el);
-      });
-   } else { %}
-      <tr>
-          <td colspan="8">No data</td>
+
+<script type="text/x-tmpl" id="tmpl-admin-table"> 
+    {%  if (o.length > 0) {
+        $.each(o, function(i, el){
+              include('tmpl-admin-table-row', el);
+        });
+     } else { %}
+        <tr>
+            <td colspan="8">No data</td>
+        </tr>
+    {% } %}
+  </script>
+  
+  <script type="text/x-tmpl" id="tmpl-table"> 
+      {%  if (o.length > 0) {
+          $.each(o, function(i, el){
+                include('tmpl-table-row', el);
+          });
+       } else { %}
+          <tr>
+              <td colspan="8">No data</td>
+          </tr>
+      {% } %}
+  </script>
+  
+  <script type="text/x-tmpl" id="tmpl-admin-table-row"> 
+    <tr data-category="{%=o.category%}" data-status="{%=o.status%}" id="tableRow">
+        <td>{%=o.category%}</td>
+        <td class="text-center">
+          <a data-toggle="modal" data-target="#imageModal" id="{%=o.filename%}" data-url="svn/homepage/{%=o.filename%}">
+              <img src="svn/homepage/{%=o.filename%}" alt="{%=o.filename%}" width="40px" class="img-rounded"/>
+          </a>
+        </td>
+        <td data-expires="{%=o.expires%}" >{%=o.expires%}</td>
+        {%  if (o.url != "") { %}
+        <td data-url="{%=o.url%}" class="text-center"><a href="{%=o.url%}" target="_blank" title="{%=o.url%}"><i class="fa fa-external-link" aria-hidden="true"></i></a></td>
+    {%  } else { %}
+        <td class="text-center"></td>
+    {%  } %}
+        <td data-created="{%=o.created%}">{%=o.created%}</td>
+        <td>{%=o.status%}</td>
+        <td data-submitter="{%=o.submitter%}">{%=o.submitter%} <br/><a href="mailto:{%=o.submitterEmail%}">{%=o.submitterEmail%}</a></td>
+        <td class="text-center">
+            <div class="actions">
+                <a title="View {%=o.jiraIssue%}" href="https://jira.cilt.uct.ac.za/browse/{%=o.jiraIssue%}" target="_blank">
+                    <img src="static/logo-jira.png" style="width: 18px;height: 18px;" alt="{%=o.jiraIssue%}"/>
+                </a>
+                <a title="Edit file" data-toggle="modal" data-target="#editModal" data-file="{%=o.filename%}" href="#" 
+                      data-url="{%=o.url%}" data-expiry="{%=o.expires%}" data-category="{%=o.category%}" data-submitter="{%=o.submitter%}" >
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a title="Archive file" data-toggle="modal" data-target="#archiveModal" data-file="{%=o.filename%}" 
+                      data-expires="{%=o.expires%}" href="#">
+                    <i class="fa fa-archive"></i>
+                </a>
+            </div>
+        </td> 
+    </tr>
+  </script>
+  
+  <script type="text/x-tmpl" id="tmpl-table-row"> 
+      <tr data-category="{%=o.category%}" data-status="{%=o.status%}" id="tableRow">
+          <td>{%=o.category%}</td>
+          <td class="text-center">
+            <a data-toggle="modal" data-target="#imageModal" id="{%=o.filename%}" data-url="svn/homepage/{%=o.filename%}">
+                <img src="svn/homepage/{%=o.filename%}" alt="{%=o.filename%}" width="40px" class="img-rounded"/>
+            </a>
+          </td>
+          <td data-expires="{%=o.expires%}" >{%=o.expires%}</td>
+          {%  if (o.url != "") { %}
+              <td data-url="{%=o.url%}" class="text-center"><a href="{%=o.url%}" target="_blank" title="{%=o.url%}"><i class="fa fa-external-link" aria-hidden="true"></i></a></td>
+          {%  } else { %}
+              <td class="text-center"></td>
+          {%  } %}
+          <td data-created="{%=o.created%}">{%=o.created%}</td>
+          <td>{%=o.status%}</td>
       </tr>
-  {% } %}
-</script>
-<script type="text/x-tmpl" id="tmpl-table-row"> 
-  <tr data-category="{%=o.category%}" data-status="{%=o.status%}" id="tableRow">
-      <td>{%=o.category%}</td>
-      <td class="text-center">
-        <a data-toggle="modal" data-target="#imageModal" id="{%=o.filename%}" data-url="svn/homepage/{%=o.filename%}">
-            <img src="svn/homepage/{%=o.filename%}" alt="{%=o.filename%}" width="40px" class="img-rounded"/>
-        </a>
-      </td>
-      <td data-expires="{%=o.expires%}" >{%=o.expires%}</td>
-      <td data-url="{%=o.url%}" class="text-center"><a href="{%=o.url%}" target="_blank" title="{%=o.url%}"><i class="fa fa-external-link" aria-hidden="true"></i></a></td>
-      <td data-created="{%=o.created%}">{%=o.created%}</td>
-      <td>{%=o.status%}</td>
-      <td data-submitter="{%=o.submitter%}">{%=o.submitter%} <br/><a href="mailto:{%=o.submitterEmail%}">{%=o.submitterEmail%}</a></td>
-      <td class="text-center">
-          <div class="actions">
-              <a title="View {%=o.jiraIssue%}" href="https://jira.cilt.uct.ac.za/browse/{%=o.jiraIssue%}" target="_blank">
-                  <img src="static/logo-jira.png" style="width: 18px;height: 18px;" alt="{%=o.jiraIssue%}"/>
-              </a>
-              <a title="Edit file" data-toggle="modal" data-target="#editModal" data-file="{%=o.filename%}" href="#" data-url="{%=o.url%}" data-expiry="{%=o.expires%}" data-category="{%=o.category%}" data-submitter="{%=o.submitter%}" >
-                  <i class="fas fa-pencil-alt"></i>
-              </a>
-              <a title="Delete file" data-toggle="modal" data-target="#deleteModal" data-file="{%=o.filename%}" data-expires="{%=o.expires%}" href="#">
-                  <i class="fa fa-times-circle" style="color:red;"></i>
-              </a>
-          </div>
-      </td>
-  </tr>
-</script>
+    </script>
 

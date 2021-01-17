@@ -14,5 +14,6 @@ $app->post('edit', 'AppBundle\\Home::editFileInfo');
 $app->post('add', 'AppBundle\\Home::addFile');
 $app->post('delete', 'AppBundle\\Home::deleteFile');
 $app->post('filteredInfo', 'AppBundle\\Home::getFilteredData');
+$app->post('getUser', 'AppBundle\\Home::fetchUserProfile');
 
 $app->run();
