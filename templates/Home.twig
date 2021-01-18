@@ -420,9 +420,8 @@
                     filterTable();
                 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    console.log ("error:" + errorThrown.message);
-                    console.log ("error:" + textStatus);
-                    console.log ("error:" + jqXHR);
+                    $('#admin-table-info-body').html(tmpl('tmpl-admin-table'));
+                    $('#table-info-body').html(tmpl('tmpl-table'));
                 });
             }
 
