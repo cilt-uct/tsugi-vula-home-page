@@ -1,0 +1,722 @@
+{% extends "@Tsugi/Page.twig" %}
+
+{% block head %}
+    {% for style in styles %}
+        <link rel="stylesheet" type="text/css" href="{{style}}"/>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div id="header">
+            <h4>Vula Landing Page Files</h4><br/>
+
+            <div id="defaultView" style="display:none;">
+                <div class="row" id="filterSection">
+                    <div class="col-sm-6">
+                        <form id="searchForm" method="post">
+                            <div class="form-group form-inline">
+                                <small>
+                                    <strong>NOTE: </strong> Search by file name / date created / expiry date
+                                </small>
+                                <div>
+                                    <label for="searchInput">Search:</label>
+                                    <input type="text" class="form-control xsmall" id="searchInput" placeholder="Enter search string"/>
+                                    <button type="submit" id="searchBtn" value="Go"><i class="fa fa-search"></i></button>
+                                    <button type="reset" value="Reset" onClick="window.location.reload()"><i class="fa fa-refresh xsmall"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <p></p>
+                        <div id="filterContainer">
+                            <div class="justify-content-right" id="statusFilterBtnContainer"></div>
+                            <div class="justify-content-center p-3" id="catFilterBtnContainer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tableSection">
+                    <table id="table-info" class="table table-hover table-condensed table-bordered table-striped" data-total="" data-limit="">
+                        <thead id="table-info-header">
+                            <th class="sortable"><i class="arrow"></i> Category</th>
+                            <th class="text-center">Thumbnail</th>
+                            <th class="sortable"><i class="arrow"></i> Expires</th>
+                            <th class="sortable text-center"><i class="arrow"></i> URL</th>
+                            <th class="sortable"><i class="arrow"></i> Created</th>
+                            <th class="sortable"><i class="arrow"></i> Status</th>
+                        </thead>
+                        <tbody id="table-info-body">
+                            <tr>
+                                <td colspan="8">Loading files ...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="pagination-container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div id="pageCounter" style='padding: 10px 20px 0px; border-top: dotted 1px #CCC;'></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" name="page" value="1" />
+                            <ul class="pagination" id="paginationSection"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="adminView" style="display:none;">
+                <br/>
+                <div class="row" id="filterSection">
+                    <div class="col-sm-6">
+                        <form method="post" id="adminSearchForm">
+                            <div class="form-group form-inline">
+                                <small>
+                                    <strong>NOTE: </strong> Search by file name / date created / expiry date / url / submitter
+                                </small>
+                                <div>
+                                    <label for="adminSearchInput">Search:</label>
+                                    <input type="text" class="form-control xsmall" id="adminSearchInput" placeholder="Enter search string"/>
+                                    <button type="submit" id="adminSearchBtn"><i class="fa fa-search xsmall"></i></button>
+                                    <button type="reset" value="Reset" onClick="window.location.reload()"><i class="fa fa-refresh xsmall"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <p></p>
+                        <div id="adminFilterContainer">
+                            <div class="justify-content-right" id="adminStatusFilterBtnContainer"></div>
+                            <div class="justify-content-center p-3" id="adminCatFilterBtnContainer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tableSection">
+                    <table id="admin-table-info" class="table table-hover table-condensed table-bordered table-striped" data-total="" data-limit="">
+                        <thead id="table-info-header">
+                            <th class="sortable"><i class="arrow"></i> Category</th>
+                            <th class="text-center">Thumbnail</th>
+                            <th class="sortable"><i class="arrow"></i> Expires</th>
+                            <th class="sortable text-center"><i class="arrow"></i> URL</th>
+                            <th class="sortable"><i class="arrow"></i> Created</th>
+                            <th class="sortable"><i class="arrow"></i> Status</th>
+                            <th class="sortable"><i class="arrow"></i> Submitter</th>
+                            <th class="text-center">Actions</th>
+                        </thead>
+                        <tbody id="admin-table-info-body">
+                            <tr>
+                                <td colspan="8">Loading files ...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="admin-pagination-container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div id="pageCounter" style='padding: 10px 20px 0px; border-top: dotted 1px #CCC;'></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul class="pagination" id="adminPaginationSection"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="imageModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <img src="" alt="file name"/>
+                    </div>
+                </div>
+            </div>
+
+            <div id="archiveModal" class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <form class="modal-content" method="post">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center">Are you sure you want to archive this file?</p>
+                            <input type="hidden" id="file_name" name="file_name"/>
+                            <input type="hidden" id="file_expiry" name="file_expiry"/>
+                            <table class="table borderless">
+                                <tr>
+                                    <td><label for="file_comments">Notes:</label></td>
+                                    <td><textarea id="file_comments" name="file_comments" class="w3-input w3-border form-control" rows="5"></textarea></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                                <button type="reset" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-success" id="archiveFileBtn">Yes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        
+            <div id="uploadModal" class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <form class="modal-content" method="post">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Upload a file</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p><small> All fields marked with <span style="color:red">*</span> are compulsory</small></p>
+                            <table class="table borderless">
+                                <tr>
+                                    <td> <span style="color:red">*</span> <label for="jira_issue">JIRA Issue</label></td>
+                                    <td><input type="text" id="jira_issue" name="jira_issue" class="form-control" required placeholder="e.g. VULAHELP-1234"/></td>
+                                </tr>
+                                <tr>
+                                    <td>  <span style="color:red">*</span> <label for="file_category">Category</label></td>
+                                    <td>
+                                        <select class="form-control" id="file_category" name="file_category" required="true">
+                                        <option selected disabled>Select from list</option>
+                                        <option>events</option>
+                                        <option>src</option>
+                                        <option>cet</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>  <span style="color:red">*</span> <label for="_img">File</label></td>
+                                    <td>
+                                        <input type="file" class="form-control-file" id="_img" name="_img" accept="image/*" onchange="encodeImgtoBase64(this)">
+                                        <input type="hidden" id="convertedImg" name="convertedImg" value="" required/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td> <span style="color:red">*</span> <label for="file_expiry">Expires</label></td>
+                                    <td><input type="date" id="file_expiry" name="file_expiry" class="form-control" value="<?php echo date('Y-m-d'); ?>" required/></td>
+                                </tr>
+                                <tr>
+                                    <td><span style="color:white">*</span> <label for="file_url">URL</label></td>
+                                    <td><input type="url" id="file_url" name="file_url" class="form-control"/></td>
+                                </tr>
+                                <tr>
+                                    <td><span style="color:white">*</span> <label for="file_comments">Comments</label></td>
+                                    <td><textarea id="file_comments" name="file_comments" class="form-control" rows="5"></textarea></td>
+                                </tr>
+                            </table>            
+                        </div>
+                    <div class="modal-footer">
+                            <button type="reset" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-success" id="uploadFileBtn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="editModal" class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <form class="modal-content" method="post">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <table class="table borderless">
+                                <tr>
+                                    <td><label for="file_submitter">Submitter:</label></td>
+                                    <td><input type="text" class="form-control" id="file_submitter" name="file_submitter" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="submitter_email">Email:</label></td>
+                                    <td><input type="text" class="form-control" id="submitter_email" name="submitter_email" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td> <span style="color:red"></span> <label for="jira_issue">JIRA URL</label></td>
+                                    <td><input type="url" id="jira_issue" name="jira_issue" class="form-control" disabled/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="file_category">Category:</label></td>
+                                    <td>
+                                        <select class="w3-input w3-border form-control" id="file_category" name="file_category">
+                                        <option>events</option>
+                                        <option>src</option>
+                                        <option>cet</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="file_name">File name:</label></td>
+                                    <td><input type="text" id="file_name" name="file_name" class="w3-input w3-border form-control" disabled/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="file_expiry">Expiry date:</label></td>
+                                    <td><input type="date" id="file_expiry" name="file_expiry" class="w3-input w3-border form-control"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="file_url">File URL:</label></td>
+                                    <td><input type="text" id="file_url" name="file_url" class="w3-input w3-border form-control"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="file_comments">Comments:</label></td>
+                                    <td><textarea id="file_comments" name="file_comments" class="w3-input w3-border form-control" rows="5"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="fileStatus">Change status:</label></td>
+                                    <td><input type="radio" id="mark_active" name="fileStatus"/> <label for="mark_active" id="mark_status">Active</label>&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" id="mark_archive" name="fileStatus" value="Archive"/> <label for="mark_archive">Archive</label> </td>
+                                </tr>
+                            </table>            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" id="editFileBtn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="responseModal" class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" id="responseTitle"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p class="" id="responseText" name="responseText"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:window.location.reload()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    {% for script in scripts %}
+        <script src="{{script}}" type="text/javascript"></script>
+    {% endfor %}
+
+    <script>
+        var data = [];
+        $(function() {
+
+            var dtToday = new Date(),
+                month = dtToday.getMonth() + 1,
+                day = dtToday.getDate(),
+                year = dtToday.getFullYear(),
+                json = [],
+                page_no = 1,
+                limitPerPage = 20,
+                filtered_total = 0,
+                active_records = 0,
+                inactive_records = 0,
+                total_records = 0,
+                active_pages = 0,
+                total_pages = 0;
+
+            $.postJSON = function(url,data){
+                return $.ajax({url:url,data:JSON.stringify(data),type:'POST', contentType:'application/json'});
+            };
+
+            getFilteredData = function(filter_info) {
+                $.postJSON( '{{ getFilteredInfo }}', filter_info) 
+                .done(function (response) {
+                    const list = response;
+                    data = list;
+                   
+                    const counts = { active: 0, inactive: 0, archive: 0, events: 0, cet: 0, src: 0, active_status: filter_info.active_status, active_category: filter_info.active_category };
+
+                    $.each(list, function(i,el) {
+                       
+                        if(el['fileStatus'] == 'Archive') {
+                            el.status = 'archive';  
+                        } else  if (new Date(el['expires'] +' 23:59:59') <= new Date()) {
+                            el.status = 'inactive';
+                        } else {
+                            el.status = 'active';
+                        }
+            
+                        counts.total_records = el.total_records;
+                        counts.active_records = el.total_active;
+                        counts.inactive_records = el.total_inactive;
+                        counts.archive_records = el.total_archive;
+                        counts.total_events = el.active_events;
+                        counts.total_cet = el.active_cet;
+                        counts.total_src = el.active_src;
+                        filtered_total = el.total_records;
+                        pagination = el.pagination;
+                    
+                        if(el['active_status'] == 'all') {
+                            counts.total_events = el.all_events;
+                            counts.total_cet = el.all_cet;
+                            counts.total_src = el.all_src;
+                            counts.total_all = el.all_all;
+                        } else {
+
+                            if(el['active_status'] == 'active') {
+                                counts.total_events = el.active_events;
+                                counts.total_cet = el.active_cet;
+                                counts.total_src = el.active_src;
+                               
+                                if(filter_info.active_category == 'all') {
+                                    filtered_total = el.total_active;
+                                } else if(filter_info.active_category == 'events') {
+                                    filtered_total = el.active_events;
+                                } else if(filter_info.active_category == 'cet') {
+                                    filtered_total = el.active_cet;
+                                } else if(filter_info.active_category == 'src') {
+                                    filtered_total = el.active_src;
+                                } 
+                                
+                            } else if(el['active_status'] == 'inactive') {
+                                counts.total_events = el.inactive_events;
+                                counts.total_cet = el.inactive_cet;
+                                counts.total_src = el.inactive_src;
+                                filtered_total = el.total_inactive;  
+                                if(filter_info.active_category == 'events') {
+                                    filtered_total = el.inactive_events;
+                                } else if(filter_info.active_category == 'cet') {
+                                    filtered_total = el.inactive_cet;
+                                } else if(filter_info.active_category == 'src') {
+                                    filtered_total = el.inactive_src;
+                                } else if(filter_info.active_category == 'all') {
+                                    filtered_total = el.total_inactive;
+                                }
+                                
+                            } else  {
+                                counts.total_events = el.archive_events;
+                                counts.total_cet = el.archive_cet;
+                                counts.total_src = el.archive_src;
+                                filtered_total = el.total_archive;
+                                if(filter_info.active_category == 'events') {
+                                    filtered_total = el.archive_events;
+                                } else if(filter_info.active_category == 'cet') {
+                                    filtered_total = el.archive_cet;
+                                } else if(filter_info.active_category == 'src') {
+                                    filtered_total = el.archive_src;
+                                } else if(filter_info.active_category == 'all') {
+                                    filtered_total = el.total_archive;
+                                }
+                            }
+                        }
+                    });         
+                   
+                    $('#table-info, #admin-table-info').attr('data-limit', limitPerPage);
+                    $('#table-info, #admin-table-info').attr('data-total', filtered_total);
+                    $('#statusFilterBtnContainer, #adminStatusFilterBtnContainer').html(tmpl('tmpl-filter-status', counts));
+                    $('#catFilterBtnContainer, #adminCatFilterBtnContainer').html(tmpl('tmpl-filter-category', counts)); 
+                    $('#admin-table-info-body').html(tmpl('tmpl-admin-table', list));
+                    $('#table-info-body').html(tmpl('tmpl-table', list));
+                    $('#paginationSection, #adminPaginationSection').html(pagination);
+                    filterTable();
+                
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log ("error:" + errorThrown.message);
+                    console.log ("error:" + textStatus);
+                    console.log ("error:" + jqXHR);
+                });
+            }
+
+            getUserProfile = function(userDetails) {
+                $.postJSON( '{{ getUserProfile}}', userDetails) 
+                .done(function (response) {
+                    const user_info = response;
+                    var user_role = "";
+                    $.each(user_info, function(i,el) {
+                        user_role = el.user_role;
+                    });
+
+                    {% if (app.tsugi.user.instructor) %}
+                        if(user_role == "admin") {
+                            $('#adminView').show();
+                            var filterDetails = {
+                                "active_status" : "active",
+                                "active_category" : "all",
+                                "pageno" : page_no
+                            };
+                            json.push(filterDetails);               
+                            getFilteredData(filterDetails);
+                        } else {
+                            $('#defaultView').show();
+                            var filterDetails = {
+                                "active_status" : "active",
+                                "active_category" : "all",
+                                "pageno" : page_no
+                            };
+                            json.push(filterDetails);
+                            getFilteredData(filterDetails);
+                        }
+                    {% else %}
+                        $('#defaultView').show();
+                        var filterDetails = {
+                            "active_status" : "active",
+                            "active_category" : "all",
+                            "pageno" : page_no
+                        };
+                        json.push(filterDetails);
+                        getFilteredData(filterDetails);
+                    {% endif %}
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log ("error:" + errorThrown.message);
+                    console.log ("error:" + textStatus);
+                    console.log ("error:" + jqXHR);
+                });
+            } 
+
+            $(document).on('click', '.page-link', function(event){
+                var searchValue = "";
+                var page = $(this).data('page_number');
+                var status = $(this).data('active_status');
+                var category = $(this).data('active_category');
+                var search_value = $('#searchInput').val();
+                var admin_search_value = $('#adminSearchInput').val();
+
+                if(search_value != "") {
+                    searchValue = search_value;
+                } else if(admin_search_value != "") {
+                    searchValue = admin_search_value;
+                }
+                
+                var filterDetails = {
+                    "active_status" : status,
+                    "active_category" : category,
+                    "pageno" : page,
+                    "searchField" : searchValue
+                };
+                json.push(filterDetails);
+                getFilteredData(filterDetails);
+            });
+
+            $('#searchInput, #adminSearchInput').on('keyup', function(event) {
+                if(this.value.length >= 3) {       
+                    var _searchValue = $(this).val().toLowerCase();
+                    const _status = $('#statusFilterBtnContainer a.active').attr('rel'),
+                          _category = $('#catFilterBtnContainer a.active').attr('rel');
+                    var filterDetails = {
+                        "active_status" : _status,
+                        "active_category" : _category,
+                        "searchField" : _searchValue
+                    }
+                    json.push(filterDetails);
+                    getFilteredData(filterDetails);
+                }
+            });
+
+            $(document).on('submit', '#searchForm, #adminSearchForm', function(event){
+                var _searchValue = $('#searchInput, #adminSearchInput').val().toLowerCase();
+                const _status = $('#statusFilterBtnContainer a.active').attr('rel'),
+                      _category = $('#catFilterBtnContainer a.active').attr('rel');
+                var filterDetails = {
+                    "active_status" : _status,
+                    "active_category" : _category,
+                    "searchField" : _searchValue
+                }
+                json.push(filterDetails);
+                getFilteredData(filterDetails);  
+                return false;
+            });
+
+            $('#filterContainer').on('click', '#statusFilterBtnContainer a', function(event){
+                $('#statusFilterBtnContainer a').removeClass('active');
+                $(this).addClass('active');
+                $('#catFilterBtnContainer a').removeClass('active');
+                $('#catFilterBtnContainer #all').addClass('active');
+               
+                const _status = $('#statusFilterBtnContainer a.active').attr('rel'),
+                      _category = $('#catFilterBtnContainer a.active').attr('rel');
+                var _searchValue = $('#searchInput').val().toLowerCase();
+
+                var filterInfo = {
+                    "active_status" : _status,
+                    "active_category" : _category,
+                    "searchField" : _searchValue
+                };
+                json.push(filterInfo);
+                getFilteredData(filterInfo);   
+            });
+
+            $('#filterContainer').on('click', '#catFilterBtnContainer a', function(event){
+                $('#catFilterBtnContainer a').removeClass('active');
+                $(this).addClass('active');
+                
+                const _status = $('#statusFilterBtnContainer a.active').attr('rel'),
+                      _category = $('#catFilterBtnContainer a.active').attr('rel');
+                var _searchValue = $('#searchInput').val().toLowerCase();
+
+                var filterDetails = {
+                    "active_status" : _status,
+                    "active_category" : _category,
+                    "searchField" : _searchValue
+                };
+                json.push(filterDetails);
+                getFilteredData(filterDetails);
+            });
+
+            $('#adminFilterContainer').on('click', '#adminStatusFilterBtnContainer a', function(event){
+                $('#adminStatusFilterBtnContainer a').removeClass('active');
+                $(this).addClass('active');
+                $('#adminCatFilterBtnContainer a').removeClass('active');
+                $('#adminCatFilterBtnContainer #all').addClass('active');
+               
+                const _status = $('#adminStatusFilterBtnContainer a.active').attr('rel'),
+                      _category = $('#adminCatFilterBtnContainer a.active').attr('rel');
+                var _searchValue = $('#adminSearchInput').val().toLowerCase();
+
+                var filterDetails = {
+                    "active_status" : _status,
+                    "active_category" : _category,
+                    "searchField" : _searchValue 
+                };
+                json.push(filterDetails);
+                getFilteredData(filterDetails);   
+            });
+
+            $('#adminFilterContainer').on('click', '#adminCatFilterBtnContainer a', function(event){
+                $('#adminCatFilterBtnContainer a').removeClass('active');
+                $(this).addClass('active');
+                
+                const _status = $('#adminStatusFilterBtnContainer a.active').attr('rel'),
+                      _category = $('#adminCatFilterBtnContainer a.active').attr('rel');
+                var _searchValue = $('#adminSearchInput').val().toLowerCase();
+
+                var filterDetails = {
+                    "active_status" : _status,
+                    "active_category" : _category,
+                    "searchField" : _searchValue
+                };
+                json.push(filterDetails);
+                getFilteredData(filterDetails);
+            });
+
+            $('#editModal').on('submit', 'form', function (e) {
+                var _changes = getInputs(this);
+                var json = [];
+                var marked_status = "";
+
+                if($("[name='fileStatus']:checked").val() == 'Archive') {
+                    marked_status = 'Archive';
+                }
+
+                if(_changes) {
+                    var fileDetails = {
+                        "filename" : _changes.file_name,
+                        "category" : _changes.file_category,
+                        "expiry" : _changes.file_expiry,
+                        "submitter" : _changes.file_submitter,
+                        "url" : _changes.file_url,
+                        "status" : marked_status,
+                        "comments" : _changes.file_comments
+                    };
+                    json.push(fileDetails);
+                }
+
+                $.postJSON( '{{ editFile}}', fileDetails )
+                .done(function() {
+                    var response_text = "This file has been successfully updated.";
+                    var response_title = "Edit " + _changes.file_name;
+                    $('#editModal').modal('toggle');
+                    $('#responseModal #responseText').html(response_text);
+                    $('#responseModal #responseTitle').html(response_title);
+                    $('#responseModal').modal('show');
+                })
+                .fail(function(err) {
+                    var response_text = "There was an error updating the file details. Please enusure that you have entered the correct details.";
+                    var response_title = "Edit " + _changes.file_name;
+                    $('#editModal').modal('toggle');
+                    $('#responseModal #responseText').html(response_text);
+                    $('#responseModal #responseTitle').html(response_title);
+                    $('#responseModal').modal('show');
+                });
+                return false;
+            });
+
+            $('#uploadModal').on('submit', 'form', function (e) {
+                var _changes = getInputs(this);
+                var json = [];
+                var filename = $('#uploadModal #_img').val().split('\\').pop();
+                var fileToUpload = $(' #uploadModal #_img').prop('files')[0];
+                var imgBase64 = $('#uploadModal #convertedImg').val();
+                var imgDimensions = $('#uploadModal #convertedImg').attr('data-dimensions');
+                var fileSubmitter = _changes.file_submitter + "<" + _changes.submitter_email + ">";
+
+                if(_changes) {
+                    var fileDetails = {
+                        "jira_issue" : _changes.jira_issue,
+                        "category" : _changes.file_category,
+                        "filename" : filename,
+                        "expiry" : _changes.file_expiry,
+                       
+                        "url" : _changes.file_url,
+                        "comments" : _changes.file_comments,
+                        "file_size" : fileToUpload.size,
+                        "file_dimensions" : imgDimensions,
+                        "fileToUpload" : fileToUpload,
+                        "fileType" : fileToUpload.type,
+                        "imageBase64" : imgBase64
+                    };
+                    json.push(fileDetails); 
+                }
+
+                $.postJSON( '{{ addFile}}', fileDetails)
+                .done(function() {
+                     $('#uploadModal').modal('hide');
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log ("error:" + errorThrown.message);
+                    console.log ("error:" + textStatus);
+                    console.log ("error:" + jqXHR);
+                });
+            });
+
+            $('#archiveModal').on('submit', 'form', function (e) {
+                var fileInfo = getInputs(this);
+                var json = [];              
+                
+                if(fileInfo) {
+                    var fileDetails = {
+                        "filename" : fileInfo.file_name, 
+                        "expiry" : fileInfo.file_expiry,
+                        "comment" : fileInfo.file_comments};
+                    json.push(fileDetails);
+                }
+                
+                $.postJSON( '{{ deleteFile}}', fileDetails)
+                .done(function() {
+                    var response_text = "This file has been succesfully archived.";
+                    var response_title = "Archive " +  fileInfo.file_name;
+                    $('#archiveModal').modal('hide');
+                    $('#responseModal #responseText').html(response_text);
+                    $('#responseModal #responseTitle').html(response_title);
+                    $('#responseModal').modal('show');
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    var response_text = "This file can not be archived due to a technical error. Please try again.";
+                    var response_title = "Archive " + _changes.file_name;
+                    $('#archiveModal').modal('hide');
+                    $('#responseModal #responseText').html(response_text);
+                    $('#responseModal #responseTitle').html(response_title);
+                    $('#responseModal').modal('show');
+                });
+                return false;         
+            });
+
+            var userDetails = {
+                "userid" : "nmali"
+            };
+            json.push(userDetails);
+            getUserProfile(userDetails); 
+
+        })
+
+    </script>
+    {{ source('tmpl.html', ignore_missing = true) }}
+{% endblock %}

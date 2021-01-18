@@ -64,3 +64,6 @@ a {
   background-color: #7f8aa1 !important;
   color: white;
 } 
+#table-info-body tr {
+  display: none;
+}
