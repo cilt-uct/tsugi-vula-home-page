@@ -20,7 +20,7 @@
                                     <strong>NOTE: </strong> Search by file name / date created / expiry date
                                 </small>
                                 <div>
-                                    <label>Search:</label>
+                                    <label for="searchInput">Search:</label>
                                     <input type="text" class="form-control xsmall" id="searchInput" placeholder="Enter search string"/>
                                     <button type="submit" id="searchBtn" value="Go"><i class="fa fa-search"></i></button>
                                     <button type="reset" value="Reset" onClick="window.location.reload()"><i class="fa fa-refresh xsmall"></i></button>
@@ -69,9 +69,6 @@
             </div>
 
             <div id="adminView" style="display:none;">
-                <!--<div class="text-right" id="uploadSection">
-                    <h3><button type="button" class="btn btn-default scheduler btn-sm" id="uploadFile" data-toggle='modal' data-target='#uploadModal'><i class="fa fa-upload"></i> Upload</button></h3>
-                </div>-->
                 <br/>
                 <div class="row" id="filterSection">
                     <div class="col-sm-6">
@@ -81,7 +78,7 @@
                                     <strong>NOTE: </strong> Search by file name / date created / expiry date / url / submitter
                                 </small>
                                 <div>
-                                    <label>Search:</label>
+                                    <label for="adminSearchInput">Search:</label>
                                     <input type="text" class="form-control xsmall" id="adminSearchInput" placeholder="Enter search string"/>
                                     <button type="submit" id="adminSearchBtn"><i class="fa fa-search xsmall"></i></button>
                                     <button type="reset" value="Reset" onClick="window.location.reload()"><i class="fa fa-refresh xsmall"></i></button>
@@ -133,7 +130,7 @@
             <div id="imageModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <img src="" />
+                        <img src="" alt="file name"/>
                     </div>
                 </div>
             </div>
@@ -151,7 +148,7 @@
                             <input type="hidden" id="file_expiry" name="file_expiry"/>
                             <table class="table borderless">
                                 <tr>
-                                    <td><label>Notes:</label></td>
+                                    <td><label for="file_comments">Notes:</label></td>
                                     <td><textarea id="file_comments" name="file_comments" class="w3-input w3-border form-control" rows="5"></textarea></td>
                                 </tr>
                             </table>
@@ -175,11 +172,11 @@
                             <p><small> All fields marked with <span style="color:red">*</span> are compulsory</small></p>
                             <table class="table borderless">
                                 <tr>
-                                    <td> <span style="color:red">*</span> <label>JIRA Issue</label></td>
+                                    <td> <span style="color:red">*</span> <label for="jira_issue">JIRA Issue</label></td>
                                     <td><input type="text" id="jira_issue" name="jira_issue" class="form-control" required placeholder="e.g. VULAHELP-1234"/></td>
                                 </tr>
                                 <tr>
-                                    <td>  <span style="color:red">*</span> <label>Category</label></td>
+                                    <td>  <span style="color:red">*</span> <label for="file_category">Category</label></td>
                                     <td>
                                         <select class="form-control" id="file_category" name="file_category" required="true">
                                         <option selected disabled>Select from list</option>
@@ -190,22 +187,22 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>  <span style="color:red">*</span> <label>File</label></td>
+                                    <td>  <span style="color:red">*</span> <label for="_img">File</label></td>
                                     <td>
                                         <input type="file" class="form-control-file" id="_img" name="_img" accept="image/*" onchange="encodeImgtoBase64(this)">
                                         <input type="hidden" id="convertedImg" name="convertedImg" value="" required/>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td> <span style="color:red">*</span> <label>Expires</label></td>
+                                    <td> <span style="color:red">*</span> <label for="file_expiry">Expires</label></td>
                                     <td><input type="date" id="file_expiry" name="file_expiry" class="form-control" value="<?php echo date('Y-m-d'); ?>" required/></td>
                                 </tr>
                                 <tr>
-                                    <td><span style="color:white">*</span> <label>URL</label></td>
+                                    <td><span style="color:white">*</span> <label for="file_url">URL</label></td>
                                     <td><input type="url" id="file_url" name="file_url" class="form-control"/></td>
                                 </tr>
                                 <tr>
-                                    <td><span style="color:white">*</span> <label>Comments</label></td>
+                                    <td><span style="color:white">*</span> <label for="file_comments">Comments</label></td>
                                     <td><textarea id="file_comments" name="file_comments" class="form-control" rows="5"></textarea></td>
                                 </tr>
                             </table>            
@@ -229,19 +226,19 @@
                         <div class="modal-body">
                             <table class="table borderless">
                                 <tr>
-                                    <td><label>Submitter:</label></td>
+                                    <td><label for="file_submitter">Submitter:</label></td>
                                     <td><input type="text" class="form-control" id="file_submitter" name="file_submitter" disabled></td>
                                 </tr>
                                 <tr>
-                                    <td><label>Email:</label></td>
+                                    <td><label for="submitter_email">Email:</label></td>
                                     <td><input type="text" class="form-control" id="submitter_email" name="submitter_email" disabled></td>
                                 </tr>
                                 <tr>
-                                    <td> <span style="color:red"></span> <label>JIRA URL</label></td>
+                                    <td> <span style="color:red"></span> <label for="jira_issue">JIRA URL</label></td>
                                     <td><input type="url" id="jira_issue" name="jira_issue" class="form-control" disabled/></td>
                                 </tr>
                                 <tr>
-                                    <td><label>Category:</label></td>
+                                    <td><label for="file_category">Category:</label></td>
                                     <td>
                                         <select class="w3-input w3-border form-control" id="file_category" name="file_category">
                                         <option>events</option>
@@ -251,23 +248,23 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><label>File name:</label></td>
+                                    <td><label for="file_name">File name:</label></td>
                                     <td><input type="text" id="file_name" name="file_name" class="w3-input w3-border form-control" disabled/></td>
                                 </tr>
                                 <tr>
-                                    <td><label>Expiry date:</label></td>
+                                    <td><label for="file_expiry">Expiry date:</label></td>
                                     <td><input type="date" id="file_expiry" name="file_expiry" class="w3-input w3-border form-control"/></td>
                                 </tr>
                                 <tr>
-                                    <td><label>File URL:</label></td>
+                                    <td><label for="file_url">File URL:</label></td>
                                     <td><input type="text" id="file_url" name="file_url" class="w3-input w3-border form-control"/></td>
                                 </tr>
                                 <tr>
-                                    <td><label>Comments:</label></td>
+                                    <td><label for="file_comments">Comments:</label></td>
                                     <td><textarea id="file_comments" name="file_comments" class="w3-input w3-border form-control" rows="5"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td><label>Change status:</label></td>
+                                    <td><label for="fileStatus">Change status:</label></td>
                                     <td><input type="radio" id="mark_active" name="fileStatus"/> <label for="mark_active" id="mark_status">Active</label>&nbsp;&nbsp;&nbsp;
                                     <input type="radio" id="mark_archive" name="fileStatus" value="Archive"/> <label for="mark_archive">Archive</label> </td>
                                 </tr>
