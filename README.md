@@ -6,7 +6,7 @@ http://source.cet.uct.ac.za/svn/sakai/uct-content/trunk/uct/homepage
 
 UCT reference:
 --------------
-https://jira.cet.uct.ac.za/browse/VULA-2652
+https://cilt.atlassian.net/browse/VULA-2652
 
 Pre-Requisites
 --------------
